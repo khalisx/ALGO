@@ -110,6 +110,52 @@ void lireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
 
 
 
+void trierTableau(Voiture voitures[], int nbVoitures) {
+
+    for (int i = 0; i < nbVoitures - 1; i++) {
+
+        int indiceMin = i;
+
+        for (int j = i + 1; j < nbVoitures; j++) {
+
+            // Comparer les marques
+
+            if (strcmp(voitures[j].marque, voitures[indiceMin].marque) < 0) {
+
+                indiceMin = j;
+
+            } else if (strcmp(voitures[j].marque, voitures[indiceMin].marque) == 0) {
+
+                // Si les marques sont identiques, comparer les modèles
+
+                if (strcmp(voitures[j].modele, voitures[indiceMin].modele) < 0) {
+
+                    indiceMin = j;
+
+                }
+
+            }
+
+        }
+
+
+
+        // Échanger les voitures
+
+        if (indiceMin != i) {
+
+            Voiture temp = voitures[i];
+
+            voitures[i] = voitures[indiceMin];
+
+            voitures[indiceMin] = temp;
+
+        }
+
+    }
+
+}
+
 
 
 
@@ -147,6 +193,22 @@ int main() {
 
 
     lireFichierEtRemplirTableau("Voiture.txt", voitures, &nbVoitures);
+
+    
+
+    printf("Avant le tri :\n");
+
+    afficherTableau(voitures, nbVoitures);
+
+
+
+    // Tri des voitures
+
+    trierTableau(voitures, nbVoitures);
+
+    
+
+    printf("\nAprès le tri :\n");
 
     afficherTableau(voitures, nbVoitures);
 
