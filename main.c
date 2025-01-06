@@ -48,6 +48,7 @@ int main() {
                         //fonction avec juste la liste des voitures 
                     }
                 }
+                break; 
 
             case 3:
                 printf("Entrer la marque de la voiture choisie : "); 
