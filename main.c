@@ -36,8 +36,20 @@ int main() {
                 break;
 
             case 2:
+
+
+            case 3:
+            
+
+            case 4:
+                printf("Fin du programme.\n");
+                return 0;
+
+            default:
+                printf("Choix invalide. Veuillez réessayer.\n");
                
-    }
+        }
 
     return 0;
+    }
 }
