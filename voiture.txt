@@ -1,0 +1,39 @@
+Tesla Model S:AB 234 CD
+
+BMW Série 3:XY 581 RE
+
+Audi A3:LM 769 PQ
+
+Mercedes-Benz Classe A:TU 412 ZK
+
+Peugeot 208:TU 412 ZK
+
+Renault Clio: JK 561 UW
+
+Ford Focus:VW 238 XY
+
+Volkswagen Golf:MN 794 WQ
+
+Nissan Qashqai:GT 567 OP
+
+Toyota Yaris:PL 823 VK
+
+Honda Civic:QR 314 SM
+
+Citroën C3:EU 943 LJ
+
+Mazda CX-5:CX 270 YV
+
+Jaguar F-Type:ZT 148 FK
+
+Porsche 911:RA 509 WL
+
+Chevrolet Camaro:VS 832 JP
+
+Subaru Outback:KC 671 NR
+
+Land Rover Range Rover:DT 305 FE
+
+Ferrari F8 Tributo:FM 854 TH
+
+Lexus RX:BI 642 VO
