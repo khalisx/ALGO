@@ -10,7 +10,7 @@ char marque[50];
 
 char modele[50];
 
-int statut
+int statut;
 
 }Voiture;
 
@@ -28,11 +28,17 @@ char nom[50];
 
 
 
+int calculPrix(int nbresemaines) {
+
+int prix_par_semaines=100;
+
+int prix_total=prix_par_semaines*nbresemaines;
+
+return prix_total;
 
 
 
-
-
+}
 
 
 
@@ -40,9 +46,13 @@ char nom[50];
 
 int main() { 
 
-    int choix; 
+    int choix;
+
+    int nbresemaine; 
 
     char prenom[50], nom[50]; 
+
+    char marque[50], modele[50];
 
     FILE *file;
 
@@ -142,33 +152,17 @@ int main() {
 
                 scanf("%s", modele);
 
+                printf("Combien de temps désirez vous louez la voiture");
 
+                scanf("%d",&nbresemaine);
 
-                file = fopen("location.txt", "a");
+                int resultat = calculPrix(nbresemaine);
 
-                if (file == NULL) {
-
-                    printf("Erreur lors de l'ouverture du fichier.\n");
-
-                    exit(EXIT_FAILURE);
-
-                }
+                 printf("Le prix total pour %d semaine(s) est de %.2d euros.\n", nbresemaine, resultat);
 
 
 
-                for (int i = 0; i < count; i++) {
-
-                    if (statut == 0) {
-
-                        printf("La voiture %s %s a été réservée avec succès.\n", marque, modele);
-
-                    } else if (statut == 1) {
-
-                        printf("La voiture %s %s est déjà louée.\n", marque, modele);
-
-                    }
-
-                }
+                
 
                 break; 
 
@@ -196,4 +190,7 @@ int main() {
 
     }
 
-}
+    
+
+    }
+
