@@ -50,7 +50,25 @@ int main() {
                 }
 
             case 3:
-            
+                printf("Entrer la marque de la voiture choisie : "); 
+                scanf("%s", marque); 
+                printf("Entrer le modele de la voiture choisie : ");
+                scanf("%s", modele);
+
+                file = fopen("location.txt", "a");
+                if (file == NULL) {
+                    printf("Erreur lors de l'ouverture du fichier.\n");
+                    exit(EXIT_FAILURE);
+                }
+
+                for (int i = 0; i < count; i++) {
+                    if (statut == 0) {
+                        printf("La voiture %s %s a été réservée avec succès.\n", marque, modele);
+                    } else if (statut == 1) {
+                        printf("La voiture %s %s est déjà louée.\n", marque, modele);
+                    }
+                }
+                break; 
 
             case 4:
                 printf("Fin du programme.\n");
