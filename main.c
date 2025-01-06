@@ -36,7 +36,18 @@ int main() {
                 break;
 
             case 2:
+                while (1) {
+                    printf("1. Rechercher une voiture en particulier\n");
+                    printf("2. Liste de nos voitures\n");
+                    scanf("%d",&choix);
+                    switch (choix) {
+                    case 1:
+                        //fonction pour rechercher une voiture
 
+                    case 2: 
+                        //fonction avec juste la liste des voitures 
+                    }
+                }
 
             case 3:
             
