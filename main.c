@@ -3,8 +3,8 @@
 #include <string.h>
 
 int main() { 
-    int choix; 
-    char prenom[50], nom[50]; 
+    int choix, count, statut;  
+    char prenom[50], nom[50], modele[50], marque[50]; 
     FILE *file;
 
     while (1) {
