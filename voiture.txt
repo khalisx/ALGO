@@ -22,7 +22,7 @@ Honda,Civic:QR 314 SM/1
 
 Citroën,C3:EU 943 LJ/1
 
-Mazda CX-5:CX 270 YV/1
+Mazda,CX-5:CX 270 YV/1
 
 Jaguar,F-Type:ZT 148 FK/1
 
@@ -30,7 +30,7 @@ Porsche,911:RA 509 WL/0
 
 Chevrolet,Camaro:VS 832 JP/1
 
-SubaruOutback:KC 671 NR/1
+Subaru,Outback:KC 671 NR/1
 
 Land Rover,Range Rover:DT 305 FE/0
 
