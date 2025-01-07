@@ -25,10 +25,10 @@ void toLowerCase(char *str) {
 }
 
 // Fonction pour charger les données du fichier
-int chargerVoitures(const char *filename, Voiture voitures[], int *car_count) {
-    FILE *file = fopen(filename, "r");
+int chargerVoitures(Voiture voitures[], int *car_count) {
+    FILE *file = fopen("voiture.txt", "r"); 
     if (file == NULL) {
-        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", filename);
+        printf("Erreur : Impossible d'ouvrir le fichier voiture.txt.\n");
         return -1;
     }
 
@@ -51,10 +51,10 @@ int chargerVoitures(const char *filename, Voiture voitures[], int *car_count) {
 }
 
 // Fonction pour sauvegarder les données mises à jour
-int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count) {
-    FILE *file = fopen(filename, "w");
+int sauvegarderVoitures(Voiture voitures[], int car_count) {
+    FILE *file = fopen("voiture.txt", "w"); 
     if (file == NULL) {
-        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", filename);
+        printf("Erreur : Impossible d'ouvrir le fichier voiture.txt.\n");
         return -1;
     }
 
@@ -71,12 +71,12 @@ int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count)
 }
 
 // Fonction pour réserver une voiture
-void reserverVoiture(const char *filename) {
+void reserverVoiture() {
     Voiture voitures[50];
     int car_count;
 
-    // Charger les données depuis le fichier
-    if (chargerVoitures(filename, voitures, &car_count) != 0) {
+    // Charger les données depuis "voiture.txt"
+    if (chargerVoitures(voitures, &car_count) != 0) {
         return;
     }
 
@@ -91,7 +91,7 @@ void reserverVoiture(const char *filename) {
     toLowerCase(marque);
     toLowerCase(modele);
 
-    // Chercher la voiture et vérifier son statut
+    // Cherche la voiture et vérifier son statut
     int voiture_trouvee = 0;
     for (int i = 0; i < car_count; i++) {
         char marque_lower[50], modele_lower[50];
@@ -104,7 +104,7 @@ void reserverVoiture(const char *filename) {
             voiture_trouvee = 1;
             if (voitures[i].statut == 0) {
                 printf("La voiture %s %s a été réservée avec succès.\n", voitures[i].marque, voitures[i].modele);
-                voitures[i].statut = 1; // Marquer comme louée
+                voitures[i].statut = 1; 
             } else {
                 printf("La voiture %s %s est déjà réservée.\n", voitures[i].marque, voitures[i].modele);
             }
@@ -117,9 +117,10 @@ void reserverVoiture(const char *filename) {
         return;
     }
 
-    // Sauvegarder les mises à jour dans le fichier
-    sauvegarderVoitures(filename, voitures, car_count);
+    // Sauvegarder les mises à jour dans "voiture.txt"
+    sauvegarderVoitures(voitures, car_count);
 }
+
 
 int main() { 
     int choix, count, statut;  
@@ -160,17 +161,11 @@ int main() {
                     printf("1. Rechercher une voiture en particulier\n");
                     printf("2. Liste de nos voitures\n");
                     scanf("%d",&choix);
-                    switch (choix) {
-                    case 1:
-                        //fonction pour rechercher une voiture
-
-                    case 2: 
-                        //fonction avec juste la liste des voitures 
-                    }
+                
+                break;
                 }
-                break; 
             case 3:
-                reserverVoiture("voiture.txt");
+                reserverVoiture();
                 break; 
 
             case 4:
