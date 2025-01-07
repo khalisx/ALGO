@@ -8,16 +8,16 @@
 #define MAX_CARS 100
 #define MAX_VOITURES 100
 
-// Structures
+
 typedef struct {
     char marque[50];
     char modele[50];
     char immatriculation[20];
-    int statut; // 0 = Disponible, 1 = Louée
+    int statut;
 } Voiture;
 
-// Prototypes
 void toLowerCase(char *str);
+void sortModelsAlphabetically(char models[][MAX_MODEL_LENGTH], int count);
 int chargerVoitures(const char *filename, Voiture voitures[], int *car_count);
 int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count);
 void reserverVoiture(const char *filename);
@@ -28,14 +28,12 @@ void afficherVoitures(const char *filename);
 void afficherMenuPrincipal();
 void afficherMenuAdmin();
 
-// Convertir une chaîne en minuscules
 void toLowerCase(char *str) {
     for (int i = 0; str[i]; i++) {
         str[i] = tolower((unsigned char)str[i]);
     }
 }
 
-// Charger les voitures depuis un fichier
 int chargerVoitures(const char *filename, Voiture voitures[], int *car_count) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -61,7 +59,6 @@ int chargerVoitures(const char *filename, Voiture voitures[], int *car_count) {
     return 0;
 }
 
-// Sauvegarder les voitures dans un fichier
 int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count) {
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
@@ -81,7 +78,6 @@ int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count)
     return 0;
 }
 
-// Réserver une voiture
 void reserverVoiture(const char *filename) {
     Voiture voitures[MAX_CARS];
     int car_count;
@@ -126,7 +122,6 @@ void reserverVoiture(const char *filename) {
     }
 }
 
-// Ajouter une voiture
 void ajouterVoiture(const char *filename) {
     Voiture nouvelle_voiture;
 
@@ -155,7 +150,6 @@ void ajouterVoiture(const char *filename) {
     printf("La voiture %s %s a été ajoutée avec succès.\n", nouvelle_voiture.marque, nouvelle_voiture.modele);
 }
 
-// Arrêter une réservation
 void arreterReservation(const char *filename) {
     Voiture voitures[MAX_CARS];
     int car_count;
@@ -199,40 +193,77 @@ void arreterReservation(const char *filename) {
         sauvegarderVoitures(filename, voitures, car_count);
     }
 }
-
-// Afficher les voitures disponibles
-void afficherVoituresDisponibles(const char *filename) {
-    Voiture voitures[MAX_CARS];
-    int car_count;
-
-    if (chargerVoitures(filename, voitures, &car_count) != 0) {
-        return;
-    }
-
-    printf("\n--- Voitures disponibles ---\n");
-    for (int i = 0; i < car_count; i++) {
-        if (voitures[i].statut == 0) {
-            printf("%s %s\n", voitures[i].marque, voitures[i].modele);
+void sortModelsAlphabetically(char models[][MAX_MODEL_LENGTH], int count) {
+    char temp[MAX_MODEL_LENGTH];
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = i + 1; j < count; j++) {
+            if (strcmp(models[i], models[j]) > 0) {
+                strcpy(temp, models[i]);
+                strcpy(models[i], models[j]);
+                strcpy(models[j], temp);
+            }
         }
     }
 }
 
-// Afficher toutes les voitures
-void afficherVoitures(const char *filename) {
-    Voiture voitures[MAX_CARS];
-    int car_count;
-
-    if (chargerVoitures(filename, voitures, &car_count) != 0) {
+void afficherVoituresDisponibles(const char *filename) {
+    FILE *file = fopen("voiture.txt", "r");
+    if (file == NULL) {
+        perror("Erreur d'ouverture du fichier");
         return;
     }
 
-    printf("\n--- Liste des voitures ---\n");
-    for (int i = 0; i < car_count; i++) {
-        printf("%s %s (%s) - %s\n", 
-               voitures[i].marque, 
-               voitures[i].modele, 
-               voitures[i].immatriculation, 
-               voitures[i].statut == 0 ? "Disponible" : "Louée");
+    char line[MAX_LINE_LENGTH];
+    char models[MAX_CARS][MAX_MODEL_LENGTH];
+    int modelCount = 0;
+    
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char *delimiter = strchr(line, ':');
+        if (delimiter != NULL) {
+            size_t modelLength = delimiter - line;
+            strncpy(models[modelCount], line, modelLength);
+            models[modelCount][modelLength] = '\0';  // Ajouter le caractère nul de fin
+            modelCount++;
+        }
+    }
+
+    fclose(file);
+
+    sortModelsAlphabetically(models, modelCount);
+
+    // Afficher les modèles triés
+    for (int i = 0; i < modelCount; i++) {
+        printf("%s\n", models[i]);
+    }
+}
+
+void afficherVoitures(const char *filename) {
+    FILE *file = fopen("voiture.txt", "r");
+    if (file == NULL) {
+        perror("Erreur d'ouverture du fichier");
+        return;
+    }
+
+    char line[MAX_LINE_LENGTH];
+    char models[MAX_CARS][MAX_MODEL_LENGTH];
+    int modelCount = 0;
+    
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char *delimiter = strchr(line, ':');
+        if (delimiter != NULL) {
+            size_t modelLength = delimiter - line;
+            strncpy(models[modelCount], line, modelLength);
+            models[modelCount][modelLength] = '\0';  // Ajouter le caractère nul de fin
+            modelCount++;
+        }
+    }
+
+    fclose(file);
+
+    sortModelsAlphabetically(models, modelCount);
+
+    for (int i = 0; i < modelCount; i++) {
+        printf("%s\n", models[i]);
     }
 }
 
@@ -281,11 +312,9 @@ void supprimerVoiture(const char *filename) {
         return;
     }
 
-    // Sauvegarder les modifications dans le fichier
     sauvegarderVoitures(filename, voitures, car_count);
 }
 
-// Menu principal
 void afficherMenuPrincipal() {
     printf("\nMenu principal :\n");
     printf("1. Se connecter\n");
@@ -296,7 +325,6 @@ void afficherMenuPrincipal() {
     printf("Votre choix : ");
 }
 
-// Menu Admin
 void afficherMenuAdmin() {
     printf("\n--- Mode Admin ---\n");
     printf("1. Ajouter une voiture\n");
