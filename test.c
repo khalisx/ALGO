@@ -13,7 +13,7 @@ typedef struct {
     char marque[50];
     char modele[50];
     char immatriculation[20];
-    int statut; 
+    int statut; // 0 = Disponible, 1 = Louée
 } Voiture;
 
 // Prototypes
@@ -236,6 +236,55 @@ void afficherVoitures(const char *filename) {
     }
 }
 
+void supprimerVoiture(const char *filename) {
+    Voiture voitures[MAX_CARS];
+    int car_count;
+
+    // Charger les voitures depuis le fichier
+    if (chargerVoitures(filename, voitures, &car_count) != 0) {
+        return;
+    }
+
+    char marque[50], modele[50];
+    printf("Entrer la marque de la voiture à supprimer : ");
+    scanf("%s", marque);
+    printf("Entrer le modèle de la voiture à supprimer : ");
+    scanf("%s", modele);
+
+    toLowerCase(marque);
+    toLowerCase(modele);
+
+    int voiture_trouvee = 0;
+
+    // Rechercher et supprimer la voiture
+    for (int i = 0; i < car_count; i++) {
+        char marque_lower[50], modele_lower[50];
+        strcpy(marque_lower, voitures[i].marque);
+        strcpy(modele_lower, voitures[i].modele);
+        toLowerCase(marque_lower);
+        toLowerCase(modele_lower);
+
+        if (strcmp(marque_lower, marque) == 0 && strcmp(modele_lower, modele) == 0) {
+            voiture_trouvee = 1;
+            // Décaler les éléments après la voiture supprimée
+            for (int j = i; j < car_count - 1; j++) {
+                voitures[j] = voitures[j + 1];
+            }
+            car_count--; // Réduire le nombre de voitures
+            printf("La voiture %s %s a été supprimée avec succès.\n", marque, modele);
+            break;
+        }
+    }
+
+    if (!voiture_trouvee) {
+        printf("Erreur : La voiture %s %s n'existe pas.\n", marque, modele);
+        return;
+    }
+
+    // Sauvegarder les modifications dans le fichier
+    sauvegarderVoitures(filename, voitures, car_count);
+}
+
 // Menu principal
 void afficherMenuPrincipal() {
     printf("\nMenu principal :\n");
@@ -251,13 +300,14 @@ void afficherMenuPrincipal() {
 void afficherMenuAdmin() {
     printf("\n--- Mode Admin ---\n");
     printf("1. Ajouter une voiture\n");
-    printf("2. Arrêter une réservation\n");
-    printf("3. Afficher les voitures disponibles\n");
-    printf("4. Retour au menu principal\n");
+    printf("2. Supprimer une voiture\n");
+    printf("3. Arrêter une réservation\n");
+    printf("4. Afficher les voitures disponibles\n");
+    printf("5. Retour au menu principal\n");
     printf("Votre choix : ");
 }
 
-// Fonction principale
+
 int main() {
     int choix;
     char prenom[50], nom[50]; 
@@ -303,10 +353,13 @@ int main() {
                         case 1:
                             ajouterVoiture("voiture.txt");
                             break;
-                        case 2:
+                        case 2: 
+                            supprimerVoiture("voiture.txt");
+                            break; 
+                        case 3:
                             arreterReservation("voiture.txt");
                             break;
-                        case 3:
+                        case 4:
                             afficherVoituresDisponibles("voiture.txt");
                             break;
                         default:
