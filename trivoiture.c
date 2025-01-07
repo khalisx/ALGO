@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TAILLE 50
+
+#define MAX_LINE_LENGTH 100
+#define MAX_VOITURES 50
 
 typedef struct {
-    char marque[TAILLE];
-    char modele[TAILLE];
+    char marque[MAX_VOITURES];
+    char modele[MAX_VOITURES];
     char plaque[9];
     int statut;
 } Voiture;
@@ -29,15 +31,15 @@ int main() {
     int tailleTableau = 0;
 
     // Lire le fichier et remplir le tableau
-    lireFichierEtRemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
+    lireFichierEtRemplirTableau("Voiture.txt", &voitures, &nbVoitures, &tailleTableau);
 
     // Trier le tableau
     trierTableau(voitures, nbVoitures);
     afficherTableau(voitures, nbVoitures);
 
     // Recherche d'une voiture
-    char marqueRecherchee[TAILLE], modeleRecherche[TAILLE];
-    printf("\nEntrez la marque de la voiture à rechercher : ")
+    char marqueRecherchee[MAX_VOITURES], modeleRecherche[MAX_VOITURES];
+    printf("\nEntrez la marque de la voiture à rechercher : ");
     scanf(" %[^\n]", marqueRecherchee);
     printf("Entrez le modèle de la voiture à rechercher : ");
     scanf(" %[^\n]", modeleRecherche);
@@ -137,7 +139,7 @@ void lireFichierEtRemplirTableau(const char *nomFichier, Voiture **voitures, int
 
     char ligne[200];
     *nbVoitures = 0;
-    *tailleTableau = 10;
+    *tailleTableau = MAX_VOITURES;
     *voitures = malloc(*tailleTableau * sizeof(Voiture));
 
     if (*voitures == NULL) {
@@ -215,8 +217,8 @@ void trierTableau(Voiture *voitures, int nbVoitures) /*tri par sélection*/ {
     for (int i = 0; i < nbVoitures - 1; i++) {
         int indiceMin = i;
         for (int j = i + 1; j < nbVoitures; j++) {
-            char marque1[TAILLE], marque2[TAILLE];
-            char modele1[TAILLE], modele2[TAILLE];
+            char marque1[MAX_VOITURES], marque2[MAX_VOITURES];
+            char modele1[MAX_VOITURES], modele2[MAX_VOITURES];
 
             normaliserChaine(voitures[j].marque, marque1);
             normaliserChaine(voitures[indiceMin].marque, marque2);
@@ -250,8 +252,8 @@ int rechercheDichotomique(Voiture *voitures, int nbVoitures, const char *marque,
 
     int gauche = 0;
     int droite = nbVoitures - 1;
-    char marqueNormalisee[TAILLE], modeleNormalisee[TAILLE];
-    char marqueVoiture[TAILLE], modeleVoiture[TAILLE];
+    char marqueNormalisee[MAX_VOITURES], modeleNormalisee[MAX_VOITURES];
+    char marqueVoiture[MAX_VOITURES], modeleVoiture[MAX_VOITURES];
 
     // Normaliser les paramètres de recherche
     normaliserChaine(marque, marqueNormalisee);
