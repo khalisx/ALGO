@@ -26,12 +26,6 @@ void afficherTableau(Voiture voitures[], int nbVoitures);
 void trierTableau(Voiture voitures[], int nbVoitures);
 void lireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int *nbVoitures);
 
-
-
-
-
-
-
 // Fonction pour convertir une chaîne en minuscules
 void toLowerCase(char *str) {
     for (int i = 0; str[i]; i++) {
@@ -183,13 +177,16 @@ int main() {
                             break;
 
                         case 3:
-                            goto main_menu;  // Retourne au menu principal
+                            // Retour au menu principal
                             break;
 
                         default:
                             printf("Choix invalide. Veuillez réessayer.\n");
                     }
+
+                    if (choix == 3) break; // Si l'utilisateur choisit de revenir au menu principal
                 }
+                break;
 
             case 3:
                 while (1) {
@@ -203,7 +200,6 @@ int main() {
                     switch (choix) {
                         case 1:
                             listereserv();
-                            
                             break;
 
                         case 2:
@@ -211,13 +207,16 @@ int main() {
                             break;
 
                         case 3:
-                            goto main_menu;  // Retourne au menu principal
+                            // Retour au menu principal
                             break;
 
                         default:
                             printf("Choix invalide. Veuillez réessayer.\n");
                     }
+
+                    if (choix == 3) break; // Si l'utilisateur choisit de revenir au menu principal
                 }
+                break;
 
             case 4:
                 printf("Fin du programme.\n");
@@ -225,10 +224,7 @@ int main() {
             
             default:
                 printf("Choix invalide. Veuillez réessayer.\n");
-               
         }
-main_menu: // Étiquette pour retourner au menu principal
-    return 0;
     }
 }
 
@@ -276,9 +272,6 @@ void listCarModels(const char *filePath) {
         printf("%s\n", models[i]);
     }
 }
-
-
-
 
 void lireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int *nbVoitures) {
     FILE *fichier = fopen(nomFichier, "r");
@@ -370,7 +363,6 @@ int listereserv() {
 
     lireFichierEtRemplirTableau("voiture.txt", voitures, &nbVoitures);
     
-
     // Tri des voitures
     trierTableau(voitures, nbVoitures);
     
