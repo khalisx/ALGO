@@ -24,7 +24,6 @@ void toLowerCase(char *str) {
     }
 }
 
-// Fonction pour charger les données du fichier
 int chargerVoitures(Voiture voitures[], int *car_count) {
     FILE *file = fopen("voiture.txt", "r"); 
     if (file == NULL) {
@@ -50,7 +49,6 @@ int chargerVoitures(Voiture voitures[], int *car_count) {
     return 0;
 }
 
-// Fonction pour sauvegarder les données mises à jour
 int sauvegarderVoitures(Voiture voitures[], int car_count) {
     FILE *file = fopen("voiture.txt", "w"); 
     if (file == NULL) {
@@ -70,7 +68,6 @@ int sauvegarderVoitures(Voiture voitures[], int car_count) {
     return 0;
 }
 
-// Fonction pour réserver une voiture
 void reserverVoiture() {
     Voiture voitures[50];
     int car_count;
@@ -80,14 +77,12 @@ void reserverVoiture() {
         return;
     }
 
-    // Demander à l'utilisateur la voiture à réserver
     char marque[50], modele[50];
     printf("\nEntrer la marque de la voiture : ");
     scanf("%s", marque);
     printf("Entrer le modèle de la voiture : ");
     scanf("%s", modele);
 
-    // Convertir les saisies utilisateur en minuscules
     toLowerCase(marque);
     toLowerCase(modele);
 
@@ -116,8 +111,6 @@ void reserverVoiture() {
         printf("Erreur : La voiture %s %s n'existe pas.\n", marque, modele);
         return;
     }
-
-    // Sauvegarder les mises à jour dans "voiture.txt"
     sauvegarderVoitures(voitures, car_count);
 }
 
