@@ -29,7 +29,7 @@ int main() {
     int tailleTableau = 0;
 
     // Lire le fichier et remplir le tableau
-    lireFichierEtRemplirTableau("Voiture.txt", &voitures, &nbVoitures, &tailleTableau);
+    lireFichierEtRemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
 
     // Trier le tableau
     trierTableau(voitures, nbVoitures);
