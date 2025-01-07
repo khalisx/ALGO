@@ -891,10 +891,10 @@ int main() {
 
             case 4: {
                 int admin_choix;
-                while (1) {
+                int retour = 0; // Variable pour quitter le menu Admin
+                while (!retour) { // Boucle pour le menu Admin
                     afficherMenuAdmin();
                     scanf("%d", &admin_choix);
-                    if (admin_choix == 4) break;
 
                     switch (admin_choix) {
                         case 1:
@@ -908,6 +908,10 @@ int main() {
                             break;
                         case 4:
                             afficherVoituresDisponibles("voiture.txt");
+                            break;
+                        case 5: 
+                            printf("Retour au menu principal...\n");
+                            retour = 1; // Quitte la boucle Admin
                             break;
                         default:
                             printf("Choix invalide.\n");
