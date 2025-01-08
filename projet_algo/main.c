@@ -3,7 +3,7 @@
 #include <string.h>
 #include "voiture.h"
 #include "historique.h"
-#include "utils.h"
+
 
 void afficherMenuPrincipal() {
     printf("\nMenu principal :\n");
@@ -14,6 +14,7 @@ void afficherMenuPrincipal() {
     printf("5. Historique des locations\n");
     printf("6. Quitter\n");
     printf("Votre choix : ");
+
 }
 
 void afficherMenuAdmin() {
@@ -24,13 +25,14 @@ void afficherMenuAdmin() {
     printf("4. Afficher les voitures disponibles\n");
     printf("5. Retour au menu principal\n");
     printf("Votre choix : ");
+
 }
 
 int main() {
     int choix;
     char prenom[50], nom[50]; 
     FILE *file; 
-    
+
     while (1) {
         afficherMenuPrincipal();
         scanf("%d", &choix);
@@ -54,12 +56,13 @@ int main() {
 
             case 2:
                 while (1) {
+
                     printf("1. Rechercher une voiture en particulier\n");
                     printf("2. Liste de nos voitures\n");
                     printf("3. Retour au menu principal\n");
                     printf("Votre choix: ");
                     scanf("%d", &choix);
-                    getchar();  
+                    getchar();  // Consomme le caractère de nouvelle ligne restant
 
                     switch (choix) {
                         case 1:
@@ -77,7 +80,6 @@ int main() {
                         default:
                             printf("Choix invalide. Veuillez réessayer.\n");
                     }
-
                     if (choix == 3) break; // Si l'utilisateur choisit de revenir au menu principal
                 }
                 break;
@@ -95,11 +97,10 @@ int main() {
                         case 1:
                             listereserv();
                             break;
-
+                            
                         case 2:
                             reserverVoiture("voiture.txt");
                             break;
-
                         case 3:
                             // Retour au menu principal
                             break;
@@ -114,8 +115,9 @@ int main() {
 
             case 4: {
                 int admin_choix;
-                int retour = 0; 
-                while (!retour) {
+                int retour = 0; // Variable pour quitter le menu Admin
+
+                while (!retour) { // Boucle pour le menu Admin
                     afficherMenuAdmin();
                     scanf("%d", &admin_choix);
 
@@ -130,11 +132,11 @@ int main() {
                             arreterReservation("voiture.txt");
                             break;
                         case 4:
-                            afficherVoituresDisponibles("voiture.txt");
+                            listereserv();
                             break;
                         case 5: 
                             printf("Retour au menu principal...\n");
-                            retour = 1;
+                            retour = 1; // Quitte la boucle Admin
                             break;
                         default:
                             printf("Choix invalide.\n");
@@ -142,15 +144,12 @@ int main() {
                 }
                 break;
             }
-
             case 5:
-                afficherHistorique();
-                break;
-
+            afficherHistorique();
+            break;
             case 6:
                 printf("Fin du programme.\n");
                 return 0;
-
             default:
                 printf("Choix invalide.\n");
         }
