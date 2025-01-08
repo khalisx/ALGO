@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -220,7 +221,7 @@ int recherche() {
 
     // Trier le tableau
     trierTableau(voitures, nbVoitures);
-    afficherTableau(voitures, nbVoitures);
+    AfficherTableau(voitures, nbVoitures);
 
     // Recherche d'une voiture
     char marqueRecherchee[MAX_VOITURES], modeleRecherche[MAX_VOITURES];
@@ -907,7 +908,7 @@ int main() {
                             arreterReservation("voiture.txt");
                             break;
                         case 4:
-                            afficherVoituresDisponibles("voiture.txt");
+                            listereserv();
                             break;
                         case 5: 
                             printf("Retour au menu principal...\n");
