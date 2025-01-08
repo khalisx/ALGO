@@ -3,7 +3,6 @@
 
 #include "voiture.h"
 
-// Structure pour représenter une réservation dans l'historique
 typedef struct {
     int id_location;    
     char prenom[50];    
@@ -13,10 +12,7 @@ typedef struct {
     int nbresemaines;   
 } HistoriqueReservation;
 
-// Fonction pour enregistrer une réservation dans l'historique
 void enregistrer_historique(HistoriqueReservation reservation);
-
-// Fonction pour afficher l'historique des réservations
 void afficherHistorique();
 
 #endif

@@ -53,11 +53,63 @@ int main() {
                 break;
 
             case 2:
-                afficherVoitures("voiture.txt");
+                while (1) {
+                    printf("1. Rechercher une voiture en particulier\n");
+                    printf("2. Liste de nos voitures\n");
+                    printf("3. Retour au menu principal\n");
+                    printf("Votre choix: ");
+                    scanf("%d", &choix);
+                    getchar();  
+
+                    switch (choix) {
+                        case 1:
+                            recherche();
+                            break;
+
+                        case 2:
+                            listCarModels("voiture.txt");
+                            break;
+
+                        case 3:
+                            // Retour au menu principal
+                            break;
+
+                        default:
+                            printf("Choix invalide. Veuillez réessayer.\n");
+                    }
+
+                    if (choix == 3) break; // Si l'utilisateur choisit de revenir au menu principal
+                }
                 break;
 
             case 3:
-                reserverVoiture("voiture.txt");
+                while (1) {
+                    printf("1. Liste des Voitures disponibles\n");
+                    printf("2. Réserver une voiture\n");
+                    printf("3. Retour au menu principal\n");
+                    printf("Votre choix: ");
+                    scanf("%d", &choix);
+                    getchar();  // Consomme le caractère de nouvelle ligne restant
+
+                    switch (choix) {
+                        case 1:
+                            listereserv();
+                            break;
+
+                        case 2:
+                            reserverVoiture("voiture.txt");
+                            break;
+
+                        case 3:
+                            // Retour au menu principal
+                            break;
+
+                        default:
+                            printf("Choix invalide. Veuillez réessayer.\n");
+                    }
+
+                    if (choix == 3) break; // Si l'utilisateur choisit de revenir au menu principal
+                }
                 break;
 
             case 4: {

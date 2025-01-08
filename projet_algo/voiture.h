@@ -2,7 +2,7 @@
 #define VOITURE_H
 
 #include "utils.h"
-
+#define MAX_MODEL_LENGTH 50
 typedef struct {
     char marque[50];
     char modele[50];
@@ -14,5 +14,24 @@ void afficherVoitures(const char *filename);
 void ajouterVoiture(const char *filename);
 int chargerVoitures(const char *filename, Voiture voitures[], int *car_count);
 int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count);
+void reserverVoiture(const char *filename);
+void supprimerVoiture(const char *filename);
+void arreterReservation(const char *filename);
+void afficherVoituresDisponibles(const char *filename);
+void sortModelsAlphabetically(char models[][MAX_MODEL_LENGTH], int count);
+void listCarModels(const char *filePath);
+int listereserv();
+int recherche();
+char convertirEnMinuscule(char c);
+void normaliserChaine(const char *chaineOrigine, char *chaineNormalisee);
+void lireFichierEtRemplirTableau(const char *nomFichier, Voiture **voitures, int *nbVoitures, int *tailleTableau);
+void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int *nbVoitures);
+void afficherTableau(Voiture voitures[], int nbVoitures);
+void AfficherTableau(Voiture *voitures, int nbVoitures);
+void trierTableau(Voiture *voitures, int nbVoitures);
+int rechercheDichotomique(Voiture *voitures, int nbVoitures, const char *marque, const char *modele);
+void calcul_prix(int nbresemaines);
+
+
 
 #endif
