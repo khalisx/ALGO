@@ -1,0 +1,12 @@
+ID Location: 0
+Prénom: TEST
+Nom: TEST
+Marque: Nissan
+Modèle: Qashqai
+Durée: 2 semaine(s)
+ID Location: 1
+Prénom: evan
+Nom: berault
+Marque: BMW
+Modèle: Série 3
+Durée: 34 semaine(s)
