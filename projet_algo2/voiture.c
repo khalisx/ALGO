@@ -17,7 +17,6 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
         perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
-
     char ligne[200];
     *nbVoitures = 0;
 
@@ -35,7 +34,6 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
         char *immatriculation = strtok(NULL, "/");
         char *statutStr = strtok(NULL, "/");
 
-
         if (marque && modele && immatriculation && statutStr) {
             // Copie des données extraites dans la structure Voiture
             strncpy(voitures[*nbVoitures].marque, marque, sizeof(voitures[*nbVoitures].marque) - 1);
@@ -47,11 +45,8 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
             voitures[*nbVoitures].immatriculation[8] = '\0';
             (*nbVoitures)++;
         }
-
     }
-
     fclose(fichier);
-
 }
 
 void listCarModels(const char *filePath) {

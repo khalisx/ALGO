@@ -3,6 +3,7 @@
 #include <string.h>
 #include "voiture.h"
 #include "historique.h"
+#include "utilisateur.h"
 
 
 void afficherMenuPrincipal() {
@@ -14,7 +15,6 @@ void afficherMenuPrincipal() {
     printf("5. Historique des locations\n");
     printf("6. Quitter\n");
     printf("Votre choix : ");
-
 }
 
 void afficherMenuAdmin() {
@@ -25,34 +25,18 @@ void afficherMenuAdmin() {
     printf("4. Afficher les voitures disponibles\n");
     printf("5. Retour au menu principal\n");
     printf("Votre choix : ");
-
 }
 
 int main() {
-    int choix;
-    char prenom[50], nom[50]; 
-    FILE *file; 
-
+    int choix; 
+    Utilisateur utilisateur;
     while (1) {
         afficherMenuPrincipal();
         scanf("%d", &choix);
         switch (choix) {
             case 1: 
-                printf("Entrer votre prenom : "); 
-                scanf("%s", prenom); 
-                printf("Entrer votre nom : ");
-                scanf("%s", nom);
-                file = fopen("utilisateurs.txt", "a");
-
-                if (file == NULL) {
-                    printf("Erreur lors de l'ouverture du fichier.\n");
-                    exit(EXIT_FAILURE);
-                }
-                fprintf(file, "Prenom: %s, Nom: %s\n", prenom, nom);
-                fclose(file);
-
-                printf("Bienvenue, %s %s ! Vos informations ont été enregistrées.\n", prenom, nom);
-                break;
+                demanderUtilisateur(&utilisateur);
+                enregistrerUtilisateur(&utilisateur); break;
             case 2:     
                 case2(); break;
             case 3:

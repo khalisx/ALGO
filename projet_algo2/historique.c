@@ -4,7 +4,6 @@
 
 
 // Fonction pour enregistrer l'historique des réservations
-
 void enregistrer_historique(HistoriqueReservation reservation) {
     FILE *file = fopen("historique_reservations.txt", "a");  // Ouvre le fichier en mode ajout
     if (file == NULL) {
@@ -21,9 +20,6 @@ void enregistrer_historique(HistoriqueReservation reservation) {
 
     fclose(file);
     printf("La réservation a été enregistrée dans l'historique.\n");
-
-
-
 }
 
 // Fonction pour afficher l'historique des réservations
@@ -33,12 +29,10 @@ void afficherHistorique() {
         printf("Erreur : Impossible d'ouvrir le fichier historique.\n");
         return;
     }
-
     char ligne[100];
     printf("\nHistorique des réservations :\n");
     while (fgets(ligne, sizeof(ligne), file)) {
         printf("%s", ligne);
     }
     fclose(file);
-
 }
