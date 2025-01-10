@@ -1,0 +1,23 @@
+?Tesla,Model S:AB 234 CD/1
+?Bmw,Serie 3:XY 581 RE/0
+?Audi,A3:LM 769 PQ/1
+?Mercedes-Benz,Classe A:TU 412 ZK/1
+?Peugeot,208:YK 412 PT/1
+?Renault,Clio:JK 561 UW/0
+?Ford,Focus:VW 238 XY/1
+?Volkswagen,Golf:MN 794 WQ/0
+?Nissan,Qashqai:GT 567 OP/0
+?Toyota,Yaris:PL 823 VK/1
+* ?Honda,Civic:QR 314 SM/1
+?Citroën,C3:EU 943 LJ/1
+?Mazda,CX-5:CX 270 YV/1
+?Jaguar,F-Type:ZT 148 FK/1
+?Porsche,911:RA 509 WL/1
+?Chevrolet,Camaro:VS 832 JP/1
+?Subaru,Outback:KC 671 NR/1
+?Land Rover,Range Rover:DT 305 FE/0
+* ?Ferrari,F8 Tributo:FM 854 TH/0
+?Lexus,RX:BI 642 VO/0
+?Ferrari,F40:FR-546-CD/1
+* ?Renault,Spider:FD-345-ZA/0
+* ?McLaren,Senna:RZ-152-RE/0
