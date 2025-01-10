@@ -1,5 +1,5 @@
 algo: main.o voiture.o historique.o utilisateur.o
-	gcc -Wall -o projet_algo2 main.o voiture.o historique.o utilisateur.o
+	gcc -Wall -o projet_algo3 main.o voiture.o historique.o utilisateur.o
 
 main.o: main.c voiture.h historique.h utilisateur.h
 	gcc -Wall -c -g main.c
@@ -14,5 +14,5 @@ utilisateur.o: utilisateur.c utilisateur.h
 	gcc -Wall -c -g utilisateur.c
 
 clean:
-	rm -f *.o projet_algo2
+	rm -f *.o projet_algo3
 
