@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "voiture.h"
 #include "historique.h"
+#include "utilisateur.h"
  
 #define MAX_LINE_LENGTH 100
 #define MAX_MODEL_LENGTH 50
