@@ -17,6 +17,7 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
         perror("Erreur lors de l'ouverture du fichier");
         exit(EXIT_FAILURE);
     }
+
     char ligne[200];
     *nbVoitures = 0;
 
@@ -34,6 +35,7 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
         char *immatriculation = strtok(NULL, "/");
         char *statutStr = strtok(NULL, "/");
 
+
         if (marque && modele && immatriculation && statutStr) {
             // Copie des données extraites dans la structure Voiture
             strncpy(voitures[*nbVoitures].marque, marque, sizeof(voitures[*nbVoitures].marque) - 1);
@@ -45,52 +47,54 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
             voitures[*nbVoitures].immatriculation[8] = '\0';
             (*nbVoitures)++;
         }
+
     }
+
     fclose(fichier);
+
 }
 
 void listCarModels(const char *filePath) {
-    Voiture *voitures = NULL;
-    int nbVoitures = 0, tailleTableau = 0;
+    Voiture voitures[MAX_VOITURES];
+    int nbVoitures = 0;
 
-    lireFichierEtRemplirTableau(filePath, &voitures, &nbVoitures, &tailleTableau);
+    LireFichierEtRemplirTableau(filePath, voitures, &nbVoitures);
 
     // Trier les voitures
     trierTableau(voitures, nbVoitures);
 
     // Afficher uniquement les marques et modèles triés
     for (int i = 0; i < nbVoitures; i++) {
-        printf("Marque: %s, Modèle: %s\n",
-               voitures[i].marque,
-               voitures[i].modele);
+        printf("Marque: %s, Modèle: %s\n", voitures[i].marque, voitures[i].modele);
     }
-
-    // Libérer la mémoire
-    free(voitures);
 }
 
 int listereserv() {
-    Voiture *voitures = NULL;
-    int nbVoitures = 0, tailleTableau = 0;
-    lireFichierEtRemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
+    Voiture voitures[MAX_VOITURES];
+    int nbVoitures = 0;
+
+    LireFichierEtRemplirTableau("voiture.txt", voitures, &nbVoitures);
+
     // Filtrer les voitures réservées
     Voiture voituresReservees[MAX_VOITURES];
     int nbReservees = 0;
+
     for (int i = 0; i < nbVoitures; i++) {
         if (voitures[i].statut == 1) { // Réservée
             voituresReservees[nbReservees++] = voitures[i];
         }
-
     }
+
     // Trier les voitures réservées
     trierTableau(voituresReservees, nbReservees);
-    // Afficher les voitures réservées triées
-    afficherTableau(voitures, nbVoitures);
-    // Libérer la mémoire
-    free(voitures);
-    return 0;
 
+    // Afficher les voitures réservées triées
+    afficherTableau(voituresReservees, nbReservees);
+
+    return 0;
 }
+
+
 // Fonction pour calculer le prix de la location
 void calcul_prix(int nbresemaines) {
     int prix = 100 * nbresemaines; // Prix de base pour 1 semaine : 100
@@ -117,22 +121,27 @@ int sauvegarderVoitures(const char *filename, Voiture voitures[], int car_count)
 }
 
 int recherche() {
-
-    Voiture *voitures = NULL; 
+    Voiture voitures[MAX_VOITURES];
     int nbVoitures = 0;
-    int tailleTableau = 0;
-    // Lire le fichier et remplir le tableau
-    lireFichierEtRemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
-    // Trier le tableau
+
+    LireFichierEtRemplirTableau("voiture.txt", voitures, &nbVoitures);
+
+    // Trier les voitures pour effectuer une recherche dichotomique
     trierTableau(voitures, nbVoitures);
+
+    // Afficher toutes les voitures
     AfficherTableau(voitures, nbVoitures);
-    // Recherche d'une voiture
-    char marqueRecherchee[MAX_VOITURES], modeleRecherche[MAX_VOITURES];
+
+    // Demander les critères de recherche
+    char marqueRecherchee[50], modeleRecherche[50];
     printf("\nEntrez la marque de la voiture à rechercher : ");
     scanf(" %[^\n]", marqueRecherchee);
     printf("Entrez le modèle de la voiture à rechercher : ");
     scanf(" %[^\n]", modeleRecherche);
+
+    // Recherche dichotomique
     int indice = rechercheDichotomique(voitures, nbVoitures, marqueRecherchee, modeleRecherche);
+
     if (indice != -1) {
         printf("Voiture trouvée : Marque: %s, Modèle: %s, Plaque: %s, Statut: %d\n",
                voitures[indice].marque,
@@ -142,10 +151,12 @@ int recherche() {
     } else {
         printf("Voiture non trouvée.\n");
     }
-    // Libérer la mémoire allouée
-    free(voitures);
+
     return 0;
 }
+
+
+
 char convertirEnMinuscule(char c) {
     if (c >= 'A' && c <= 'Z') {
         return c + ('a' - 'A'); // Décalage ASCII pour passer en minuscule
@@ -202,69 +213,6 @@ void normaliserChaine(const char *chaineOrigine, char *chaineNormalisee) {
 
 }
 
-void lireFichierEtRemplirTableau(const char *nomFichier, Voiture **voitures, int *nbVoitures, int *tailleTableau) {
-    FILE *fichier = fopen(nomFichier, "r");
-
-    if (fichier == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
-        exit(EXIT_FAILURE);
-    }
-
-    char ligne[200];
-    *nbVoitures = 0;
-    *tailleTableau = MAX_VOITURES;
-    *voitures = malloc(*tailleTableau * sizeof(Voiture));
-
-    if (*voitures == NULL) {
-        perror("Erreur lors de l'allocation mémoire");
-        fclose(fichier);
-        exit(EXIT_FAILURE);
-    }
-
-    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
-        if (*nbVoitures >= *tailleTableau) {
-            *tailleTableau *= 2;
-            *voitures = realloc(*voitures, *tailleTableau * sizeof(Voiture));
-            if (*voitures == NULL) {
-                perror("Erreur lors du redimensionnement mémoire");
-                fclose(fichier);
-                exit(EXIT_FAILURE);
-            }
-        }
-
-        ligne[strcspn(ligne, "\n")] = '\0';
-        char *debutModele = strchr(ligne, ',');
-        char *debutPlaque = debutModele ? strchr(debutModele + 1, ':') : NULL;
-        char *debutStatut = debutPlaque ? strchr(debutPlaque + 1, '/') : NULL;
-
-        if (debutModele && debutPlaque && debutStatut) {
-            debutModele++;
-            debutPlaque++;
-            debutStatut++;
-
-            int tailleMarque = debutModele - ligne - 1;
-            int tailleModele = debutPlaque - debutModele - 1;
-            int taillePlaque = debutStatut - debutPlaque - 1;
-
-            if (tailleMarque > 0 && tailleModele > 0 && taillePlaque > 0) {
-                strncpy((*voitures)[*nbVoitures].marque, ligne, tailleMarque);
-                (*voitures)[*nbVoitures].marque[tailleMarque] = '\0';
-
-                strncpy((*voitures)[*nbVoitures].modele, debutModele, tailleModele);
-                (*voitures)[*nbVoitures].modele[tailleModele] = '\0';
-
-                strncpy((*voitures)[*nbVoitures].immatriculation, debutPlaque, taillePlaque);
-                (*voitures)[*nbVoitures].immatriculation[taillePlaque] = '\0';
-
-
-                (*voitures)[*nbVoitures].statut = atoi(debutStatut);
-                (*nbVoitures)++;
-
-            }
-        }
-    }
-    fclose(fichier);
-}
 
 void afficherTableau(Voiture voitures[], int nbVoitures) {
     printf("Liste des voitures disponibles :\n");
@@ -363,97 +311,54 @@ int rechercheDichotomique(Voiture *voitures, int nbVoitures, const char *marque,
 }
 
 void reserverVoiture(const char *filename) {
-    Voiture *voitures = NULL;
-    int nbVoitures = 0, tailleTableau = 0;
+    Voiture voitures[MAX_VOITURES];
+    int nbVoitures = 0;
 
-    lireFichierEtRemplirTableau(filename, &voitures, &nbVoitures, &tailleTableau);
+    LireFichierEtRemplirTableau(filename, voitures, &nbVoitures);
+
     char marque[50], modele[50];
-
     printf("\nEntrer la marque de la voiture : ");
-    fgets(marque, sizeof(marque), stdin);
-    marque[strcspn(marque, "\n")] = '\0';
+    scanf(" %[^\n]", marque);
     printf("Entrer le modèle de la voiture : ");
-    fgets(modele, sizeof(modele), stdin);
-    modele[strcspn(modele, "\n")] = '\0';
-
-    char marqueNormalisee[50], modeleNormalisee[50];
-    normaliserChaine(marque, marqueNormalisee);
-    normaliserChaine(modele, modeleNormalisee);
+    scanf(" %[^\n]", modele);
 
     int voitureTrouvee = 0;
 
     for (int i = 0; i < nbVoitures; i++) {
-        char marqueTableau[50], modeleTableau[50];
-        normaliserChaine(voitures[i].marque, marqueTableau);
-        normaliserChaine(voitures[i].modele, modeleTableau);
-
-        if (strcmp(marqueTableau, marqueNormalisee) == 0 && strcmp(modeleTableau, modeleNormalisee) == 0) {
+        if (strcmp(voitures[i].marque, marque) == 0 && strcmp(voitures[i].modele, modele) == 0) {
             voitureTrouvee = 1;
             if (voitures[i].statut == 0) {
+                voitures[i].statut = 1; // Marquer comme réservée
                 printf("La voiture %s %s a été réservée avec succès.\n", voitures[i].marque, voitures[i].modele);
-                voitures[i].statut = 1;
-
-                int dernierId = lireDernierId();
-
-                // Créer une nouvelle réservation
 
                 HistoriqueReservation reservation;
-
-                reservation.id_location = dernierId + 1;
-
+                reservation.id_location = lireDernierId() + 1;
                 mettreAJourDernierId(reservation.id_location);
 
-
-
-                printf("Entrez votre prénom: ");
-
+                printf("Entrez votre prénom : ");
                 scanf("%s", reservation.prenom);
-
-                printf("Entrez votre nom: ");
-
+                printf("Entrez votre nom : ");
                 scanf("%s", reservation.nom);
-
-                printf("Entrez la durée de la location en semaines: ");
-
+                printf("Entrez la durée de la location en semaines : ");
                 scanf("%d", &reservation.nbresemaines);
 
-                // Calcul du prix et enregistrement de l'historique
-
+                // Enregistrer la réservation dans l'historique
                 calcul_prix(reservation.nbresemaines);
-
                 strcpy(reservation.marque, voitures[i].marque);
-
                 strcpy(reservation.modele, voitures[i].modele);
-
                 enregistrer_historique(reservation);
-
             } else {
-
                 printf("La voiture %s %s est déjà réservée.\n", voitures[i].marque, voitures[i].modele);
-
             }
-
             break;
-
         }
-
     }
-
 
     if (!voitureTrouvee) {
-
         printf("Erreur : La voiture %s %s n'existe pas.\n", marque, modele);
-
     } else {
-
         sauvegarderVoitures(filename, voitures, nbVoitures);
-
     }
-
-    // Libérer la mémoire allouée
-
-    free(voitures);
-
 }
 
 
@@ -509,201 +414,77 @@ void ajouterVoiture(const char *filename) {
 
 }
 
-
 void arreterReservation(const char *filename) {
-    Voiture *voitures = NULL;
-    int car_count = 0, taille_tableau = 0;
+    Voiture voitures[MAX_VOITURES];
+    int nbVoitures = 0;
 
-    lireFichierEtRemplirTableau(filename, &voitures, &car_count, &taille_tableau);
+    LireFichierEtRemplirTableau(filename, voitures, &nbVoitures);
+
     char marque[50], modele[50];
-    char marque_normalisee[50], modele_normalisee[50];
-
     printf("Entrer la marque de la voiture : ");
-    viderTampon(); // Vider le tampon avant fgets
-    fgets(marque, sizeof(marque), stdin);
-    marque[strcspn(marque, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
-
+    scanf(" %[^\n]", marque);
     printf("Entrer le modèle de la voiture : ");
-    fgets(modele, sizeof(modele), stdin);
-    modele[strcspn(modele, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
+    scanf(" %[^\n]", modele);
 
-    normaliserChaine(marque, marque_normalisee);
-    normaliserChaine(modele, modele_normalisee);
+    int voitureTrouvee = 0;
 
-    int voiture_trouvee = 0;
-    for (int i = 0; i < car_count; i++) {
-        char marque_voiture_normalisee[50], modele_voiture_normalisee[50];
-        normaliserChaine(voitures[i].marque, marque_voiture_normalisee);
-        normaliserChaine(voitures[i].modele, modele_voiture_normalisee);
-
-        if (strcmp(marque_voiture_normalisee, marque_normalisee) == 0 &&
-            strcmp(modele_voiture_normalisee, modele_normalisee) == 0) {
-
-            voiture_trouvee = 1;
-
+    for (int i = 0; i < nbVoitures; i++) {
+        if (strcmp(voitures[i].marque, marque) == 0 && strcmp(voitures[i].modele, modele) == 0) {
+            voitureTrouvee = 1;
             if (voitures[i].statut == 1) {
-                voitures[i].statut = 0;
-                printf("La réservation de la voiture %s %s a été arrêtée.\n", 
-                       voitures[i].marque, voitures[i].modele);
+                voitures[i].statut = 0; // Marquer comme disponible
+                printf("La réservation de la voiture %s %s a été arrêtée.\n", voitures[i].marque, voitures[i].modele);
             } else {
-                printf("La voiture %s %s n'est pas réservée.\n", 
-                       voitures[i].marque, voitures[i].modele);
+                printf("La voiture %s %s n'est pas réservée.\n", voitures[i].marque, voitures[i].modele);
             }
             break;
         }
     }
 
-    if (!voiture_trouvee) {
+    if (!voitureTrouvee) {
         printf("Erreur : La voiture %s %s n'existe pas.\n", marque, modele);
     } else {
-        sauvegarderVoitures(filename, voitures, car_count);
+        sauvegarderVoitures(filename, voitures, nbVoitures);
     }
-
-    free(voitures);
 }
 
 void supprimerVoiture(const char *filename) {
-    Voiture *voitures = NULL;
-    int car_count = 0, taille_tableau = 0;
+    Voiture voitures[MAX_VOITURES];
+    int nbVoitures = 0;
 
-    // Charger les voitures depuis le fichier
-    lireFichierEtRemplirTableau(filename, &voitures, &car_count, &taille_tableau);
+    LireFichierEtRemplirTableau(filename, voitures, &nbVoitures);
+
     char marque[50], modele[50];
-    char marque_normalisee[50], modele_normalisee[50];
-
     printf("Entrer la marque de la voiture à supprimer : ");
-    viderTampon(); // Vider le tampon avant fgets
-    fgets(marque, sizeof(marque), stdin);
-    marque[strcspn(marque, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
-
+    scanf(" %[^\n]", marque);
     printf("Entrer le modèle de la voiture à supprimer : ");
-    fgets(modele, sizeof(modele), stdin);
-    modele[strcspn(modele, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
+    scanf(" %[^\n]", modele);
 
-    // Normaliser les entrées utilisateur
-    normaliserChaine(marque, marque_normalisee);
-    normaliserChaine(modele, modele_normalisee);
+    int voitureTrouvee = 0;
 
-    int voiture_trouvee = 0;
-
-    for (int i = 0; i < car_count; i++) {
-        char marque_voiture_normalisee[50], modele_voiture_normalisee[50];
-        normaliserChaine(voitures[i].marque, marque_voiture_normalisee);
-        normaliserChaine(voitures[i].modele, modele_voiture_normalisee);
-
-        if (strcmp(marque_voiture_normalisee, marque_normalisee) == 0 &&
-            strcmp(modele_voiture_normalisee, modele_normalisee) == 0) {
-            voiture_trouvee = 1;
-
-            // Décaler les éléments après la voiture supprimée
-            for (int j = i; j < car_count - 1; j++) {
+    for (int i = 0; i < nbVoitures; i++) {
+        if (strcmp(voitures[i].marque, marque) == 0 && strcmp(voitures[i].modele, modele) == 0) {
+            voitureTrouvee = 1;
+            // Décaler les voitures pour supprimer l'entrée
+            for (int j = i; j < nbVoitures - 1; j++) {
                 voitures[j] = voitures[j + 1];
             }
-            car_count--; // Réduire le nombre de voitures
-            i--; // Revenir en arrière pour vérifier le nouvel élément à la position i
+            nbVoitures--;
+            break;
         }
     }
 
-    if (!voiture_trouvee) {
+    if (!voitureTrouvee) {
         printf("Erreur : La voiture %s %s n'existe pas.\n", marque, modele);
     } else {
-
-        // Sauvegarder les modifications dans le fichier
-        sauvegarderVoitures(filename, voitures, car_count);
+        sauvegarderVoitures(filename, voitures, nbVoitures);
         printf("La voiture %s %s a été supprimée avec succès.\n", marque, modele);
     }
-
-    // Libérer la mémoire allouée
-    free(voitures);
 }
 
 void viderTampon() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
-void case2(){ 
-    int choix;
-    while (1) {
-        printf("1. Rechercher une voiture en particulier\n");
-        printf("2. Liste de nos voitures\n");
-        printf("3. Retour au menu principal\n");
-        printf("Votre choix: ");
-        scanf("%d", &choix);
-        getchar();  // Consomme le caractère de nouvelle ligne restant
 
-        switch (choix) {
-            case 1:
-                recherche();
-            break;
-            case 2:
-                listCarModels("voiture.txt");
-            break;
-            case 3:
-                // Retour au menu principal
-            break;
-            default:
-                printf("Choix invalide. Veuillez réessayer.\n");
-            }
-    if (choix == 3) break; 
-    }
-}
-
-void case3(){
-    int choix; 
-    while (1) {
-        printf("1. Liste des Voitures disponibles\n");
-        printf("2. Réserver une voiture\n");
-        printf("3. Retour au menu principal\n");
-        printf("Votre choix: ");
-        scanf("%d", &choix);
-        getchar();  // Consomme le caractère de nouvelle ligne restant
-
-        switch (choix) {
-            case 1:
-                listereserv();
-                break;                           
-            case 2:
-                reserverVoiture("voiture.txt");
-                break;
-            case 3:
-                // Retour au menu principal
-                break;
-            default:
-                printf("Choix invalide. Veuillez réessayer.\n");
-        }
-
-        if (choix == 3) break; // Si l'utilisateur choisit de revenir au menu principal
-    }
-}
-
-void case4(){
-    int admin_choix;
-    int retour = 0; // Variable pour quitter le menu Admin
-
-    while (!retour) { // Boucle pour le menu Admin
-        afficherMenuAdmin();
-        scanf("%d", &admin_choix);
-
-        switch (admin_choix) {
-            case 1:
-                ajouterVoiture("voiture.txt");
-                break;
-            case 2: 
-                supprimerVoiture("voiture.txt");
-                break; 
-            case 3:
-                arreterReservation("voiture.txt");
-                break;
-            case 4:
-                listereserv();
-                break;
-            case 5: 
-                printf("Retour au menu principal...\n");
-                retour = 1; // Quitte la boucle Admin
-                break;
-            default:
-                printf("Choix invalide.\n");
-        }
-    }
-}
 
