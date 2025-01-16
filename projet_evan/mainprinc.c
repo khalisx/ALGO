@@ -3,6 +3,7 @@
 #include <string.h>
 #include "voiture.h"
 #include "historique.h"
+#include "utilisateur.h"
 
 void afficherMenuPrincipal() {
     printf("\nMenu principal :\n");
@@ -28,35 +29,18 @@ void afficherMenuAdmin() {
 #include <stdio.h>
 #include <stdlib.h>
 
-void enregistrerUtilisateur(char *prenom, char *nom) {
-    FILE *file = fopen("utilisateurs.txt", "a");
-    if (file == NULL) {
-        printf("Erreur lors de l'ouverture du fichier des utilisateurs.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Écrit les informations sous forme de texte, avec un espace entre prénom et nom
-    fprintf(file, "%s %s\n", prenom, nom);
-
-    fclose(file);
-    printf("Bienvenue, %s %s ! Vos informations ont été enregistrées.\n", prenom, nom);
-}
-
-
 int main() {
     int choix;
     char prenom[50], nom[50];
+    Utilisateur utilisateur;
 
     while (1) {
         afficherMenuPrincipal();
         scanf("%d", &choix);
         switch (choix) {
             case 1: 
-                printf("Entrer votre prenom : "); 
-                scanf("%s", prenom); 
-                printf("Entrer votre nom : ");
-                scanf("%s", nom);
-                enregistrerUtilisateur(prenom, nom);
+                demanderUtilisateur(&utilisateur);
+                enregistrerUtilisateur(&utilisateur); break;
                 break;
             case 2:
                 while (1) {
