@@ -10,7 +10,7 @@
 #define MAX_CARS 100
 #define MAX_VOITURES 100
  
-void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int *nbVoitures) {
+void LireFichier(const char *nomFichier, Voiture voitures[], int *nbVoitures) {
     FILE *fichier = fopen(nomFichier, "r");
  
     if (fichier == NULL) {
@@ -52,21 +52,87 @@ void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int
     fclose(fichier);
  
 }
+
+
+void RemplirTableau(const char *nomFichier, Voiture **voitures, int *nbVoitures, int *tailleTableau) {
+    FILE *fichier = fopen(nomFichier, "r");
+ 
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier");
+        exit(EXIT_FAILURE);
+    }
+ 
+    char ligne[200];
+    *nbVoitures = 0;
+    *tailleTableau = MAX_VOITURES;
+    *voitures = malloc(*tailleTableau * sizeof(Voiture));
+ 
+    if (*voitures == NULL) {
+        perror("Erreur lors de l'allocation mémoire");
+        fclose(fichier);
+        exit(EXIT_FAILURE);
+    }
+ 
+    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
+        if (*nbVoitures >= *tailleTableau) {
+            *tailleTableau *= 2;
+            *voitures = realloc(*voitures, *tailleTableau * sizeof(Voiture));
+            if (*voitures == NULL) {
+                perror("Erreur lors du redimensionnement mémoire");
+                fclose(fichier);
+                exit(EXIT_FAILURE);
+            }
+        }
+ 
+        ligne[strcspn(ligne, "\n")] = '\0';
+        char *debutModele = strchr(ligne, ',');
+        char *debutPlaque = debutModele ? strchr(debutModele + 1, ':') : NULL;
+        char *debutStatut = debutPlaque ? strchr(debutPlaque + 1, '/') : NULL;
+ 
+        if (debutModele && debutPlaque && debutStatut) {
+            debutModele++;
+            debutPlaque++;
+            debutStatut++;
+ 
+            int tailleMarque = debutModele - ligne - 1;
+            int tailleModele = debutPlaque - debutModele - 1;
+            int taillePlaque = debutStatut - debutPlaque - 1;
+ 
+            if (tailleMarque > 0 && tailleModele > 0 && taillePlaque > 0) {
+                strncpy((*voitures)[*nbVoitures].marque, ligne, tailleMarque);
+                (*voitures)[*nbVoitures].marque[tailleMarque] = '\0';
+ 
+                strncpy((*voitures)[*nbVoitures].modele, debutModele, tailleModele);
+                (*voitures)[*nbVoitures].modele[tailleModele] = '\0';
+ 
+                strncpy((*voitures)[*nbVoitures].immatriculation, debutPlaque, taillePlaque);
+                (*voitures)[*nbVoitures].immatriculation[taillePlaque] = '\0';
+ 
+
+                (*voitures)[*nbVoitures].statut = atoi(debutStatut);
+                (*nbVoitures)++;
+            }
+        }
+    }
+    fclose(fichier);
+}
  
 void listCarModels(const char *filePath) {
     Voiture *voitures = NULL;
     int nbVoitures = 0, tailleTableau = 0;
  
-    lireFichierEtRemplirTableau(filePath, &voitures, &nbVoitures, &tailleTableau);
+    RemplirTableau(filePath, &voitures, &nbVoitures, &tailleTableau);
  
     // Trier les voitures
     trierTableau(voitures, nbVoitures);
  
-    // Afficher uniquement les marques et modèles triés
+    // Afficher uniquement les marques et modèles triés sans les lignes commençant par '*'
     for (int i = 0; i < nbVoitures; i++) {
-        printf("Marque: %s, Modèle: %s\n",
-               voitures[i].marque,
-               voitures[i].modele);
+        if (voitures[i].marque[0] != '*') {  // Vérifie si la ligne ne commence pas par '*'
+            printf("Marque: %s, Modèle: %s\n",
+                   voitures[i].marque,
+                   voitures[i].modele);
+        }
     }
  
     // Libérer la mémoire
@@ -76,7 +142,7 @@ void listCarModels(const char *filePath) {
 int listereserv() {
     Voiture *voitures = NULL;
     int nbVoitures = 0, tailleTableau = 0;
-    lireFichierEtRemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
+    RemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
     // Filtrer les voitures réservées
     Voiture voituresReservees[MAX_VOITURES];
     int nbReservees = 0;
@@ -145,7 +211,7 @@ int recherche() {
     int tailleTableau = 0;
  
     // Lire le fichier et remplir le tableau
-    lireFichierEtRemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
+    RemplirTableau("voiture.txt", &voitures, &nbVoitures, &tailleTableau);
  
     // Trier le tableau
     trierTableau(voitures, nbVoitures);
@@ -236,81 +302,6 @@ void normaliserChaine(const char *chaineOrigine, char *chaineNormalisee) {
 }
 
  
-void lireFichierEtRemplirTableau(const char *nomFichier, Voiture **voitures, int *nbVoitures, int *tailleTableau) {
-    FILE *fichier = fopen(nomFichier, "r");
- 
-    if (fichier == NULL) {
-        perror("Erreur lors de l'ouverture du fichier");
-        exit(EXIT_FAILURE);
-    }
- 
-    char ligne[200];
-    *nbVoitures = 0;
-    *tailleTableau = MAX_VOITURES;
-    *voitures = malloc(*tailleTableau * sizeof(Voiture));
- 
-    if (*voitures == NULL) {
-        perror("Erreur lors de l'allocation mémoire");
-        fclose(fichier);
-        exit(EXIT_FAILURE);
-    }
- 
-    while (fgets(ligne, sizeof(ligne), fichier) != NULL) {
-        if (*nbVoitures >= *tailleTableau) {
-            *tailleTableau *= 2;
-            *voitures = realloc(*voitures, *tailleTableau * sizeof(Voiture));
-            if (*voitures == NULL) {
-                perror("Erreur lors du redimensionnement mémoire");
-                fclose(fichier);
-                exit(EXIT_FAILURE);
-            }
-        }
- 
-        ligne[strcspn(ligne, "\n")] = '\0';
-        char *debutModele = strchr(ligne, ',');
-        char *debutPlaque = debutModele ? strchr(debutModele + 1, ':') : NULL;
-        char *debutStatut = debutPlaque ? strchr(debutPlaque + 1, '/') : NULL;
- 
-        if (debutModele && debutPlaque && debutStatut) {
-            debutModele++;
-            debutPlaque++;
-            debutStatut++;
- 
-            int tailleMarque = debutModele - ligne - 1;
-            int tailleModele = debutPlaque - debutModele - 1;
-            int taillePlaque = debutStatut - debutPlaque - 1;
- 
-            if (tailleMarque > 0 && tailleModele > 0 && taillePlaque > 0) {
-                // Remplissage des champs de la voiture
-                strncpy((*voitures)[*nbVoitures].marque, ligne, tailleMarque);
-                (*voitures)[*nbVoitures].marque[tailleMarque] = '\0';
- 
-                strncpy((*voitures)[*nbVoitures].modele, debutModele, tailleModele);
-                (*voitures)[*nbVoitures].modele[tailleModele] = '\0';
- 
-                strncpy((*voitures)[*nbVoitures].immatriculation, debutPlaque, taillePlaque);
-                (*voitures)[*nbVoitures].immatriculation[taillePlaque] = '\0';
- 
-                // Le statut : actif (1) ou supprimé (0)
-                (*voitures)[*nbVoitures].statut = atoi(debutStatut);
- 
-                // Déterminer si la voiture est marquée comme supprimée
-                // Si la marque commence par un astérisque, la voiture est supprimée
-                (*voitures)[*nbVoitures].supprime = ((*voitures)[*nbVoitures].marque[0] == '*') ? 1 : 0;
- 
-                // Si la voiture est marquée comme supprimée, enlever l'astérisque de la marque
-                if ((*voitures)[*nbVoitures].supprime) {
-                    memmove((*voitures)[*nbVoitures].marque, (*voitures)[*nbVoitures].marque + 1, strlen((*voitures)[*nbVoitures].marque));
-                }
- 
-                // Incrémenter le nombre de voitures lues
-                (*nbVoitures)++;
-            }
-        }
-    }
- 
-    fclose(fichier);
-}
  
 // Fonction pour nettoyer les points d'interrogation
 void nettoyerTexte(char *texte) {
@@ -439,7 +430,7 @@ void reserverVoiture(const char *filename) {
     Voiture *voitures = NULL;
     int nbVoitures = 0, tailleTableau = 0;
  
-    lireFichierEtRemplirTableau(filename, &voitures, &nbVoitures, &tailleTableau);
+    RemplirTableau(filename, &voitures, &nbVoitures, &tailleTableau);
     char marque[50], modele[50];
  
     printf("\nEntrer la marque de la voiture : ");
@@ -566,7 +557,7 @@ void arreterReservation(const char *filename) {
     Voiture *voitures = NULL;
     int car_count = 0, taille_tableau = 0;
  
-    lireFichierEtRemplirTableau(filename, &voitures, &car_count, &taille_tableau);
+    RemplirTableau(filename, &voitures, &car_count, &taille_tableau);
     char marque[50], modele[50];
     char marque_normalisee[50], modele_normalisee[50];
  
@@ -619,7 +610,7 @@ void supprimerVoiture(const char *filename) {
     int car_count = 0, taille_tableau = 0;
 
     // Charger les voitures depuis le fichier
-    lireFichierEtRemplirTableau(filename, &voitures, &car_count, &taille_tableau);
+    RemplirTableau(filename, &voitures, &car_count, &taille_tableau);
 
     char marque[50], modele[50];
     char marque_normalisee[50], modele_normalisee[50];
@@ -648,15 +639,18 @@ void supprimerVoiture(const char *filename) {
             strcmp(modele_voiture_normalisee, modele_normalisee) == 0) {
             voiture_trouvee = 1;
 
-            // Ajouter un astérisque uniquement si la voiture n'en a pas déjà un
+            // Ajouter un astérisque au début de la marque si ce n'est pas déjà fait
             if (voitures[i].marque[0] != '*') {
-                char marque_temp[50];
+                char marque_temp[100];
                 snprintf(marque_temp, sizeof(marque_temp), "*%s", voitures[i].marque);
                 strncpy(voitures[i].marque, marque_temp, sizeof(voitures[i].marque) - 1);
-                voitures[i].marque[sizeof(voitures[i].marque) - 1] = '\0'; // Assurez la terminaison
+                voitures[i].marque[sizeof(voitures[i].marque) - 1] = '\0'; // Assurer la terminaison
             }
-            printf("La voiture %s %s a été marquée comme supprimée.\n",
-                   marque, modele);
+
+            // Modifier le statut de la voiture pour "supprimée" (statut 1)
+            voitures[i].statut = 1;
+
+            printf("La voiture %s %s a été marquée comme supprimée.\n", marque, modele);
             break;
         }
     }
