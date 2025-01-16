@@ -1,40 +1,39 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "historique.h"
 
-// Fonction pour enregistrer l'historique des réservations en binaire
+
+// Fonction pour enregistrer l'historique des réservations
 void enregistrer_historique(HistoriqueReservation reservation) {
-    FILE *file = fopen("historique_reservations.txt", "ab");  // Ouvre le fichier en mode ajout binaire
+    FILE *file = fopen("historique_reservations.txt", "a");  // Ouvre le fichier en mode ajout
     if (file == NULL) {
         printf("Erreur lors de l'ouverture du fichier d'historique.\n");
         exit(EXIT_FAILURE);
     }
 
-    fwrite(&reservation, sizeof(HistoriqueReservation), 1, file);  // Écrit la structure entière en binaire
+    fprintf(file, "ID Location: %d\n", reservation.id_location);
+    fprintf(file, "Prénom: %s\n", reservation.prenom);
+    fprintf(file, "Nom: %s\n", reservation.nom);
+    fprintf(file, "Marque: %s\n", reservation.marque);
+    fprintf(file, "Modèle: %s\n", reservation.modele);
+    fprintf(file, "Durée: %d semaine(s)\n", reservation.nbresemaines);
 
     fclose(file);
     printf("La réservation a été enregistrée dans l'historique.\n");
 }
 
-// Fonction pour afficher l'historique des réservations à partir d'un fichier binaire
+// Fonction pour afficher l'historique des réservations
 void afficherHistorique() {
-    FILE *file = fopen("historique_reservations.txt", "rb");
+    FILE *file = fopen("historique_reservations.txt", "r");
     if (file == NULL) {
         printf("Erreur : Impossible d'ouvrir le fichier historique.\n");
         return;
     }
-
-    HistoriqueReservation reservation;
+    char ligne[100];
     printf("\nHistorique des réservations :\n");
-
-    // Lit et affiche chaque enregistrement jusqu'à la fin du fichier
-    while (fread(&reservation, sizeof(HistoriqueReservation), 1, file)) {
-        printf("ID Location: %d\n", reservation.id_location);
-        printf("Prénom: %s\n", reservation.prenom);
-        printf("Nom: %s\n", reservation.nom);
-        printf("Marque: %s\n", reservation.marque);
-        printf("Modèle: %s\n", reservation.modele);
-        printf("Durée: %d semaine(s)\n\n", reservation.nbresemaines);
+    while (fgets(ligne, sizeof(ligne), file)) {
+        printf("%s", ligne);
     }
     fclose(file);
 }
