@@ -42,16 +42,16 @@ char convertirEnMinuscule(char c);
 // Normaliser une chaîne de caractères (exemple : convertir en minuscules)
 void normaliserChaine(const char *chaineOrigine, char *chaineNormalisee);
 
-// Lire un fichier et remplir un tableau de voitures
-void lireFichierEtRemplirTableau(const char *nomFichier, Voiture **voitures, int *nbVoitures, int *tailleTableau);
 
 // Lire un fichier et remplir un tableau de voitures (surcharge)
-void LireFichierEtRemplirTableau(const char *nomFichier, Voiture voitures[], int *nbVoitures);
+void LireFichier(const char *nomFichier, Voiture voitures[], int *nbVoitures);
+
+void RemplirTableau(const char *nomFichier, Voiture **voitures, int *nbVoitures, int *tailleTableau);
 
 // Afficher un tableau de voitures
 void afficherTableau(Voiture voitures[], int nbVoitures);
 
-// Afficher un tableau de voitures (surcharge)
+// Afficher un tableau de voitures
 void AfficherTableau(Voiture *voitures, int nbVoitures);
 
 // Trier un tableau de voitures
@@ -66,7 +66,7 @@ int lireDernierId();
 // Mettre à jour le dernier ID
 void mettreAJourDernierId(int nouvelId);
 
-// Vider le tampon de saisie (stdin)
+// Vider le tampon de saisie
 void viderTampon();
 
 // Recherche de voiture
