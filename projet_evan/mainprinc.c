@@ -25,17 +25,23 @@ void afficherMenuAdmin() {
     printf("Votre choix : ");
 }
 
+#include <stdio.h>
+#include <stdlib.h>
+
 void enregistrerUtilisateur(char *prenom, char *nom) {
-    FILE *file = fopen("utilisateurs.txt", "ab");
+    FILE *file = fopen("utilisateurs.txt", "a");
     if (file == NULL) {
         printf("Erreur lors de l'ouverture du fichier des utilisateurs.\n");
         exit(EXIT_FAILURE);
     }
-    fwrite(prenom, sizeof(char), 50, file);
-    fwrite(nom, sizeof(char), 50, file);
+
+    // Écrit les informations sous forme de texte, avec un espace entre prénom et nom
+    fprintf(file, "%s %s\n", prenom, nom);
+
     fclose(file);
     printf("Bienvenue, %s %s ! Vos informations ont été enregistrées.\n", prenom, nom);
 }
+
 
 int main() {
     int choix;
